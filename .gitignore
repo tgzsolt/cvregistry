@@ -141,3 +141,14 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Idea
+.idea/
+
+# Python / cvregistry
+.venv
+__pycache__/
+*.pyc
+
+# Build
+build/

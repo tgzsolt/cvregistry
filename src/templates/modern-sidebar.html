@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="{{ language }}">
+<head>
+<meta charset="utf-8">
+<title>{{ name }} — CV</title>
+<style>
+  @page {
+    size: A4;
+    margin: 0;
+    background: linear-gradient(to right, #429CF0 0, #429CF0 62mm, #ffffff 62mm, #ffffff 100%);
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    margin: 0;
+    padding: 0;
+    font-family: "Avenir Next Condensed", sans-serif;
+    color: #222222;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  body {
+    display: table;
+    width: 100%;
+  }
+
+  .sidebar {
+    display: table-cell;
+    width: 180px;
+    vertical-align: top;
+    padding: 20px;
+    color: #ffffff;
+  }
+
+  .main {
+    display: table-cell;
+    vertical-align: top;
+    padding: 12mm 12mm 12mm 10mm;
+  }
+
+  /* Circular PNG (cropped in generate.py); fills the padded sidebar width. */
+  .photo {
+    width: 100%;
+    display: block;
+    margin: 0 0 5mm 0;
+  }
+
+  .sidebar h2 {
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 15px 0 5px 0;
+    font-weight: 500;
+  }
+  .sidebar h2:first-of-type { margin-top: 0; }
+
+  /* Keep each sidebar heading with its content on the same page. */
+  .sidebar-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding-top: 20px;
+  }
+
+  .sidebar p { margin: 0 0 2mm; color: #dfe0fb; }
+
+  .comp-cat {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 3mm;
+  }
+  .comp-items { color: #dfe0fb; }
+
+  /* Skill bars */
+  .skill { margin: 2mm 0; }
+  .skill-name {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 1mm;
+  }
+  .bar { height: 3px; background: rgba(255, 255, 255, 0.25); border-radius: 2px; }
+  .bar > span { display: block; height: 3px; background: #ffffff; border-radius: 2px; }
+
+  .sidebar ul { list-style: none; margin: 0; padding: 0; }
+  .sidebar li { color: #dfe0fb; margin-bottom: 1mm; }
+
+  .achievement { margin-bottom: 3mm; }
+  .achievement .title { color: #ffffff; font-weight: 700; }
+  .achievement .meta { color: #dfe0fb; }
+
+  /* ---------- Main (right column) ---------- */
+  .main { margin-left: 62mm; padding: 12mm 12mm 12mm 10mm; }
+
+  .header-container { position: fixed; top: 35px; left: 265px; width: 500px; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 55px; }
+  .header .name {
+    font-size: 30px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  .header .headline {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #8a8a8a;
+    margin-top: 2mm;
+  }
+  .header-right { text-align: right; }
+  .brand-logo { width: 30mm; height: auto; display: block; margin: 0 0 3mm auto; }
+
+  .section {
+    padding-top: 140px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .section-title {
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    padding-bottom: 10px;
+  }
+
+  .section-title .employer {
+    color: #429CF0;
+  }
+
+  .role { font-size: 14px; margin-bottom: 5mm; break-before: auto; break-inside: avoid; page-break-inside: avoid; }
+  .role h4 { margin: 0; font-weight: 700; }
+  .role .subtitle { color: #777; margin: 0 0 1mm; }
+  .role ul { margin: 1mm 0 0; padding-left: 4mm; break-inside: avoid; }
+  .role li { margin-bottom: 1mm; }
+  .tech { color: #555; }
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    {% if photo %}<img class="photo" src="{{ photo }}" alt="{{ name }}">{% endif %}
+
+    <div class="sidebar-section">
+      <h2>{{ labels.about }}</h2>
+      <ul>
+        {% for a in about %}<li>{{ a }}</li>{% endfor %}
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <h2>{{ labels.competence }}</h2>
+      {% for c in competence %}
+        <div class="comp-cat">{{ c.category }}</div>
+        <div class="comp-items">{{ c['items'] }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="sidebar-section">
+      <h2>{{ labels.skills }}</h2>
+      {% for s in skills %}
+        <div class="skill">
+          <div class="skill-name">{{ s.name }}</div>
+          <div class="bar"><span style="width: {{ s.level * 20 }}%"></span></div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="sidebar-section">
+      <h2>{{ labels.achievements }}</h2>
+      {% for a in achievements %}
+        <div class="achievement">
+          <div class="title">{{ a.title }}</div>
+          <div class="meta">{{ a.type }}{% if a.meta %} · {{ a.meta }}{% endif %}</div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="sidebar-section">
+      <h2>{{ labels.languages }}</h2>
+      <ul>
+        {% for l in languages %}<li>{{ l.name }} — {{ l.level }}</li>{% endfor %}
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <h2>{{ labels.hobbies }}</h2>
+      <ul>
+        {% for h in hobbies %}<li>{{ h }}</li>{% endfor %}
+      </ul>
+    </div>
+  </aside>
+  <div class="header-container">
+    <div class="header">
+      <div>
+        <div class="name">{{ name }}</div>
+        <div class="headline">{{ headline }}</div>
+      </div>
+      <div class="header-right">
+        {% if brand_logo %}<img class="brand-logo" src="{{ brand_logo }}" alt="Alvicom">{% endif %}
+      </div>
+    </div>
+  </div>
+  <main class="main">
+    {% for e in experience %}
+      <div class="section">
+        <div class="section-title">{{ labels.experience }} – <span class="employer">{{ e.employer }}</span></div>
+        {% for r in e.roles %}
+          <div class="role">
+            <h4>{{ r.title }} · {{ r.period }}</h4>
+            <p class="subtitle">{{ r.subtitle }}</p>
+            <ul>
+              {% for it in r['items'] %}
+                <li>{{ it.text }}{% if it.tech %} <span class="tech">— {{ it.tech | join(' · ') }}</span>{% endif %}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </main>
+</body>
+</html>
